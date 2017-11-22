@@ -5,39 +5,24 @@ import com.books.book.respository.BookRepository;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.net.util.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
-import sun.misc.BASE64Encoder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-
-import javax.annotation.Resource;
-import javax.persistence.Lob;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.nio.file.Path;
-import java.sql.Blob;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
 
 
 @SessionAttributes("UserSession")
 @Controller
 public class BookController {
+
+Logger logger = LogManager.getLogger(BookController.class);
 
 @Autowired
 BookRepository bookRepository;
@@ -45,20 +30,22 @@ BookRepository bookRepository;
 @RequestMapping(value = "/",method = RequestMethod.GET)
 public String index (Model model){
     model.addAttribute("book", new Book());
+    logger.info("indexPage...");
     return "index";
     }
 
     @RequestMapping(value = "/books", method = RequestMethod.GET)
-    public String listBooks(@ModelAttribute("book") Book book,MultipartFile file,Model model) throws IOException {
+    public String listBooks(@ModelAttribute("book") Book book,Model model) throws IOException {
         model.addAttribute("book", new Book());
         model.addAttribute("listBooks", this.bookRepository.findAll());
+        logger.info("BooksListPage...");
         return "books";
     }
 
     @RequestMapping("/remove/{id}")
     public String removeBook(@PathVariable("id") long id){
         this.bookRepository.deleteById(id);
-
+        logger.info("DelBook...");
         return "redirect:/books";
     }
 
@@ -66,13 +53,12 @@ public String index (Model model){
     public String editBook(@PathVariable("id") long id, Model model){
         model.addAttribute("book", this.bookRepository.getById(id));
         model.addAttribute("listBooks", this.bookRepository.findAll());
-
+        logger.info("BookEdit...");
         return "books";
     }
 
     @RequestMapping(value="books/add", method=RequestMethod.POST)
     public  String handleFileUpload(@ModelAttribute("book") Book book,MultipartFile file){
-        // only do the upload if user selected file to upload
         if (!file.isEmpty()) {
             try {
                 byte[] bytes = IOUtils.toByteArray(file.getInputStream());
@@ -80,9 +66,8 @@ public String index (Model model){
                 book.setPhotoContentType(file.getContentType());
                 book.setPhotoBlob(bytes);
                 bookRepository.save(book);
-                //after done updating the record, redirect back to worker page
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("File is Empty");
             return "redirect:/books";}}
         return "redirect:/books";
     }

@@ -2,8 +2,9 @@ package com.books.book.model;
 
 
 import com.sun.istack.internal.NotNull;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.annotations.Type;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -16,7 +17,6 @@ public class Book implements Serializable {
     @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name = "id")
     private long id;
-
     @Column(name = "name")
     @NotNull
     private String name;
