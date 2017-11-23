@@ -20,18 +20,16 @@
             </Policies>
             <DefaultRolloverStrategy max="10"/>
         </RollingFile>
-        <Root level="info">
-            <AppenderRef ref="ConsoleAppender"/>
-            <AppenderRef ref="FileAppender"/>
-        </Root>
+
     </Appenders>
     <Loggers>
         <Logger name="com.example.log4j2demo" level="debug" additivity="false">
             <AppenderRef ref="ConsoleAppender" />
         </Logger>
-
         <Root level="info">
-            <AppenderRef ref="ConsoleAppender" />
+            <AppenderRef ref="ConsoleAppender"/>
+            <AppenderRef ref="FileAppender"/>
+
         </Root>
     </Loggers>
 </Configuration>

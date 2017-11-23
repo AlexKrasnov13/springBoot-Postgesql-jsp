@@ -9,6 +9,7 @@
     <title>Books Page</title>
 
     <style type="text/css">
+
         .tg {
             border-collapse: collapse;
             border-spacing: 0;
@@ -45,6 +46,17 @@
         .tg .tg-4eph {
             background-color: #f9f9f9
         }
+        .error {
+            color: #800000;
+        }
+
+        .errorblock {
+            color: #000;
+            background-color: #ffEEEE;
+            border: 3px solid #ff0000;
+            padding: 8px;
+            margin: 16px;
+        }
     </style>
 </head>
 <body>
@@ -75,11 +87,11 @@
     <br>
     <br>
     <br>
-    <h1>Добавить книгу</h1>
+<h1>Добавить книгу</h1>
 
-    <c:url var="addBook" value="/books/add"/>
+<c:url var="addBook" value="/books/add"/>
 
-    <form:form action="${addBook}" modelAttribute="book" enctype="multipart/form-data">
+<form:form action="${addBook}" modelAttribute="book" enctype="multipart/form-data">
     <table>
         <c:if test="${!empty book.name}">
             <tr>
@@ -126,21 +138,21 @@
         </tr>
         <tr>
             <td><form:label path="photoBlob">Загрузить обложку:</form:label></td>
-            <td><input type="file" name="file" /></td>
+            <td><input type="file" accept="image/*" name="file"/></td>
         </tr>
 
-            <td colspan="2">
-                <c:if test="${!empty book.name}">
-                    <input type="submit"
-                           value="<spring:message text="Редактировать"/>"/>
-                </c:if>
-                <c:if test="${empty book.name}">
-                    <input type="submit"
-                           value="<spring:message text="Добавить книгу"/>"/>
-                </c:if>
-            </td>
+        <td colspan="2">
+            <c:if test="${!empty book.name}">
+                <input type="submit"
+                       value="<spring:message text="Редактировать"/>"/>
+            </c:if>
+            <c:if test="${empty book.name}">
+                <input type="submit"
+                       value="<spring:message text="Добавить книгу"/>"/>
+            </c:if>
+        </td>
         </tr>
     </table>
-    </form:form>
+</form:form>
 </body>
 </html>

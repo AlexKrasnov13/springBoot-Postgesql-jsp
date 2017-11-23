@@ -1,12 +1,12 @@
 package com.books.book.model;
 
 
-import com.sun.istack.internal.NotNull;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Entity
@@ -17,18 +17,21 @@ public class Book implements Serializable {
     @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name = "id")
     private long id;
+
     @Column(name = "name")
-    @NotNull
+    @Size(min = 3,max = 50,message = "Поле должно быть не мение 3 букв и не более 50")
     private String name;
 
     @Column(name = "author")
     @NotNull
+    @Size(min = 3,max = 50,message = "Поле должно быть не мение 3 букв и не более 50 ")
     private String author;
 
     @Column(name = "info")
-    @NotNull
+    @Size(min = 0,max = 600,message = "Поле должно быть не мение 3 букв и не более 600 ")
     @Type(type = "text")
     private String info;
+
 
     @Column(name="photo_blob")
     @Type(type="org.hibernate.type.BinaryType")
@@ -38,7 +41,9 @@ public class Book implements Serializable {
     private Integer photoContentLength;
 
     @Column(name = "photo_content_type", length = 50)
+    @Pattern(regexp = "^image.(jpeg|png|gif)$", message = "Только файл изображений")
     private String photoContentType;
+
 
     public long getId() {
         return id;
@@ -46,6 +51,7 @@ public class Book implements Serializable {
 
     public Book() {
     }
+
 
     public byte[] getPhotoBlob() {
         return photoBlob;

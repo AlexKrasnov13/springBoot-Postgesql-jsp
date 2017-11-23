@@ -7,6 +7,7 @@ import org.apache.commons.net.util.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.apache.logging.log4j.LogManager;
@@ -14,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
@@ -58,18 +60,23 @@ public String index (Model model){
     }
 
     @RequestMapping(value="books/add", method=RequestMethod.POST)
-    public  String handleFileUpload(@ModelAttribute("book") Book book,MultipartFile file){
-        if (!file.isEmpty()) {
-            try {
-                byte[] bytes = IOUtils.toByteArray(file.getInputStream());
-                book.setPhotoContentLength(Long.valueOf(file.getSize()).intValue());
-                book.setPhotoContentType(file.getContentType());
-                book.setPhotoBlob(bytes);
-                bookRepository.save(book);
-            } catch (IOException e) {
-                logger.error("File is Empty");
-            return "redirect:/books";}}
-        return "redirect:/books";
+    public  String handleFileUpload(@Valid @ModelAttribute("book") Book book, MultipartFile file, BindingResult result){
+        if(result.hasErrors()){logger.info("fafasf");}
+/*
+            if ((!file.isEmpty()) && (file.getContentType().matches("^image.(jpeg|png|gif)$"))) {
+*/
+                try {
+                    byte[] bytes = IOUtils.toByteArray(file.getInputStream());
+                    book.setPhotoContentLength(Long.valueOf(file.getSize()).intValue());
+                    book.setPhotoContentType(file.getContentType());
+                    book.setPhotoBlob(bytes);
+                    bookRepository.save(book);
+                } catch (IOException e) {
+                    logger.debug(e.toString() + "ошибка валидации");
+                    return "books";
+                }
+
+        return "books";
     }
 
    @RequestMapping("/bookdata/{id}")
