@@ -83,15 +83,17 @@
         </c:forEach>
     </table>
 </c:if>
-    <br>
-    <br>
-    <br>
-    <br>
+<br>
+<br>
+<br>
+<br>
 <h1>Добавить книгу</h1>
 
 <c:url var="addBook" value="/books/add"/>
 
 <form:form action="${addBook}" modelAttribute="book" enctype="multipart/form-data">
+    <td>
+    </td>
     <table>
         <c:if test="${!empty book.name}">
             <tr>
@@ -111,9 +113,15 @@
                 <form:label path="name">
                     <spring:message text="Название"/>
                 </form:label>
+
             </td>
             <td>
                 <form:input path="name"/>
+            </td>
+            <td>
+                <form:errors path="name"
+                             cssClass="error" element="div">
+                </form:errors>
             </td>
         </tr>
         <tr>
@@ -125,6 +133,9 @@
             <td>
                 <form:input path="author"/>
             </td>
+            <form:errors path="author"
+                         cssClass="error" element="div">
+            </form:errors>
         </tr>
         <tr>
             <td>
@@ -135,10 +146,14 @@
             <td>
                 <form:textarea path="info" />
             </td>
+            <form:errors path="info"
+                         cssClass="error" element="div">
+            </form:errors>
         </tr>
         <tr>
             <td><form:label path="photoBlob">Загрузить обложку:</form:label></td>
-            <td><input type="file" accept="image/*" name="file"/></td>
+            <td><input type="file" accept="image/*" name="file" /></td>
+            <td><form:errors path="*" cssClass="error"/> </td>
         </tr>
 
         <td colspan="2">

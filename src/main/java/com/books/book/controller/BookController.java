@@ -60,28 +60,26 @@ public String index (Model model){
     }
 
     @RequestMapping(value="books/add", method=RequestMethod.POST)
-    public  String handleFileUpload(@Valid @ModelAttribute("book") Book book, MultipartFile file, BindingResult result){
-        if(result.hasErrors()){logger.info("fafasf");}
-/*
-            if ((!file.isEmpty()) && (file.getContentType().matches("^image.(jpeg|png|gif)$"))) {
-*/
-                try {
-                    byte[] bytes = IOUtils.toByteArray(file.getInputStream());
-                    book.setPhotoContentLength(Long.valueOf(file.getSize()).intValue());
-                    book.setPhotoContentType(file.getContentType());
-                    book.setPhotoBlob(bytes);
-                    bookRepository.save(book);
-                } catch (IOException e) {
-                    logger.debug(e.toString() + "ошибка валидации");
-                    return "books";
-                }
-
-        return "books";
+    public  String handleFileUpload(@ModelAttribute("book") @Valid Book book,BindingResult result, MultipartFile file) {
+        if (result.hasErrors()) {
+            logger.debug("errors in form" + result.toString());
+            return "books";
+        } else
+            try {
+                byte[] bytes = IOUtils.toByteArray(file.getInputStream());
+                book.setPhotoContentLength(Long.valueOf(file.getSize()).intValue());
+                book.setPhotoContentType(file.getContentType());
+                book.setPhotoBlob(bytes);
+                bookRepository.save(book);
+            } catch (IOException e) {
+                logger.error("File error");
+                return "redirect:/books";
+            }
+        return "redirect:/books";
     }
 
    @RequestMapping("/bookdata/{id}")
     public String bookData(@PathVariable("id") long id,Model model, HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
-       Book book = bookRepository.getById(id);
        model.addAttribute("book", bookRepository.getById(id));
        byte[] encodeBase64 = Base64.encodeBase64(bookRepository.getById(id).getPhotoBlob());
        String base64Encoded = new String(encodeBase64, "UTF-8");

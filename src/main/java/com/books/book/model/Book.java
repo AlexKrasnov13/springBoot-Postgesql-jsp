@@ -41,7 +41,7 @@ public class Book implements Serializable {
     private Integer photoContentLength;
 
     @Column(name = "photo_content_type", length = 50)
-    @Pattern(regexp = "^image.(jpeg|png|gif)$", message = "Только файл изображений")
+    @Pattern(regexp = "^image(.)+(jpeg|png|gif)$",message = "Только файл изображений")
     private String photoContentType;
 
 
