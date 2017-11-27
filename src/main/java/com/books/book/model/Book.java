@@ -1,9 +1,11 @@
 package com.books.book.model;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -28,7 +30,7 @@ public class Book implements Serializable {
     private String author;
 
     @Column(name = "info")
-    @Size(min = 0,max = 600,message = "Поле должно быть не мение 3 букв и не более 600 ")
+    @Size(min = 1,max = 600,message = "Поле должно быть не более 600 символов ")
     @Type(type = "text")
     private String info;
 
@@ -41,7 +43,8 @@ public class Book implements Serializable {
     private Integer photoContentLength;
 
     @Column(name = "photo_content_type", length = 50)
-    @Pattern(regexp = "^image(.)+(jpeg|png|gif)$",message = "Только файл изображений")
+    //@NotEmpty(message = "Только изображения")
+    //@Pattern(regexp = "^[a-z]{5}(.)(jpeg|png|jpg)$" ,message = "only image file")
     private String photoContentType;
 
 

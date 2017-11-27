@@ -61,6 +61,9 @@ public String index (Model model){
 
     @RequestMapping(value="books/add", method=RequestMethod.POST)
     public  String handleFileUpload(@ModelAttribute("book") @Valid Book book,BindingResult result, MultipartFile file) {
+        if (!file.getContentType().equalsIgnoreCase("image/jpeg")){
+            result.rejectValue("PhotoContentType","PhotoContentType.notimage","Только *.jpeg формат ");
+        }
         if (result.hasErrors()) {
             logger.debug("errors in form" + result.toString());
             return "books";
